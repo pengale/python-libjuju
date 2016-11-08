@@ -1236,8 +1236,8 @@ class BundleHandler(object):
         await self.client_facade.AddCharm(None, entity_id)
         return entity_id
 
-    async def addMachines(self, series, constraints, container_type,
-                          parent_id):
+    async def addMachines(self, series=None, constraints=None, container_type=None,
+                          parent_id=None):
         """
         :param series string:
             Series holds the optional machine OS series.
@@ -1260,8 +1260,9 @@ class BundleHandler(object):
             series=series,
             constraints=constraints,
             container_type=container_type,
-            parent_id=self.resolve(parent_id),
+            parent_id=self.resolve(parent_id) if parent_id else None,
         )
+        params = params.serialize()
         results = await self.client_facade.AddMachines(params)
         log.debug('Added new machine %s', results[0].machine)
         return results[0].machine
@@ -1285,8 +1286,8 @@ class BundleHandler(object):
         log.info('Relating %s <-> %s', *endpoints)
         return await self.model.add_relation(*endpoints)
 
-    async def deploy(self, charm, series, application, options, constraints,
-                     storage, endpoint_bindings, resources):
+    async def deploy(self, charm, series=None, application=None, options=None, constraints=None,
+                     storage=None, endpoint_bindings=None, resources=None):
         """
         :param charm string:
             Charm holds the URL of the charm to be used to deploy this
@@ -1318,7 +1319,9 @@ class BundleHandler(object):
         # resolve indirect references
         charm = self.resolve(charm)
         # stringify all config values for API
-        options = {k: str(v) for k, v in options.items()}
+        options = {
+            k: str(v) for k, v in options.items()
+        } if options is not None else {}
         # build param object
         app = client.ApplicationDeploy(
             charm_url=charm,
