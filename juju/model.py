@@ -1262,10 +1262,9 @@ class BundleHandler(object):
             container_type=container_type,
             parent_id=self.resolve(parent_id) if parent_id else None,
         )
-        params = params.serialize()
-        results = await self.client_facade.AddMachines(params)
-        log.debug('Added new machine %s', results[0].machine)
-        return results[0].machine
+        result = await self.client_facade.AddMachines([params])
+        log.debug('Added new machine %s', result.results[0].machine)
+        return result.results[0].machine
 
     async def addRelation(self, endpoint1, endpoint2):
         """

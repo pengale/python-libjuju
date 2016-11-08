@@ -9078,7 +9078,7 @@ class ClientFacade(Type):
         Returns -> typing.Sequence<+T_co>[~AddMachinesResult]<~AddMachinesResult>
         '''
         # map input types to rpc msg
-        msg = dict(type='Client', request='AddMachines', version=1, params={"params": params})
+        msg = dict(type='Client', request='AddMachines', version=1, params=params)
         reply = await self.rpc(msg)
         return reply
 
